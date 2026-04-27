@@ -15,7 +15,3 @@ const marker = L.marker([5.5538, 95.3186]).addTo(map);
 marker
   .bindPopup("<b>Masjid Raya Baiturrahman</b><br>Banda Aceh, Aceh.")
   .openPopup();
-
-// Menambahkan marker Blang Padang
-const marker2 = L.marker([5.5512, 95.3143]).addTo(map);
-marker2.bindPopup("<b>Blang Padang</b><br>Lapangan bekas pangkalan udara Belanda, jadi ruang publik warga Banda Aceh");
