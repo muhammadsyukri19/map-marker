@@ -36,9 +36,11 @@ map.on("locationfound", function (e) {
 
   // Buat marker di posisi user
   const userMarker = L.marker(e.latlng)
-    .bindPopup("Anda berada di sekitar " + radius.toFixed(0) + " meter dari titik ini")
+    .bindPopup(
+      "Anda berada di sekitar " + radius.toFixed(0) + " meter dari titik ini",
+    )
     .openPopup();
-  
+
   // Buat lingkaran area akurasi
   const userCircle = L.circle(e.latlng, radius);
 
