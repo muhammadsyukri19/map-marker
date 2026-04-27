@@ -37,7 +37,7 @@ map.on("locationfound", function (e) {
   // Buat marker di posisi user
   const userMarker = L.marker(e.latlng)
     .bindPopup(
-      "Anda berada di sekitar " + radius.toFixed(0) + " meter dari titik ini"
+      "Anda berada di sekitar " + radius.toFixed(0) + " meter dari titik ini",
     )
     .openPopup();
 
