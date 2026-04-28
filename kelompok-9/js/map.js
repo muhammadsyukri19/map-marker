@@ -8,8 +8,31 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
 }).addTo(map);
 
-// Menambahkan marker di koordinat Masjid Raya Baiturrahman
-const marker = L.marker([5.553221, 95.318375]).addTo(map);
+// --- Custom SVG Icon untuk Masjid Raya ---
+// Ubah path di sini sesuai dengan file SVG yang Anda inginkan
+const SVG_ICON_PATH = 'assets/mosque-icon.svg';
+
+// Fetch SVG dan render sebagai icon
+fetch(SVG_ICON_PATH)
+  .then(response => response.text())
+  .then(svgData => {
+    const masjidIcon = L.divIcon({
+      html: svgData,
+      iconSize: [40, 50],
+      iconAnchor: [20, 50],
+      popupAnchor: [0, -50],
+      className: 'svg-icon-masjid'
+    });
+
+    // Menambahkan marker di koordinat Masjid Raya Baiturrahman dengan custom SVG icon
+    const marker = L.marker([5.553221, 95.318375], { icon: masjidIcon }).addTo(map);
+
+    // Menambahkan popup pada marker yang akan otomatis terbuka
+    marker
+      .bindPopup("<b>Masjid Raya Baiturrahman</b><br>ikon pusat keagamaan, budaya, dan sejarah Aceh yang terletak di pusat Kota Banda Aceh.")
+      .openPopup();
+  })
+  .catch(error => console.error('Error loading SVG:', error));
 
 // Menambahkan popup pada marker yang akan otomatis terbuka
 marker
