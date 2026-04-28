@@ -13,6 +13,7 @@
     />
     <!-- Memuat file CSS kustom -->
     <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/search.css" />
   </head>
   <body>
     <header>
@@ -20,7 +21,13 @@
       <p>Lokasi: Masjid Raya Baiturrahman, Banda Aceh</p>
     </header>
 
-    <!-- Kontainer Peta -->
+    <!-- Kontainer Peta dan Search -->
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Cari sebuah tempat (misal: Masjid Raya, Tsunami Museum, dll.)" />
+      <button id="search-btn">Cari</button>
+      <div id="search-results" class="search-results"></div>
+    </div>
+    
     <div class="map-controls">
       <button id="btn-locate">📍 Lokasi Saya</button>
     </div>
@@ -34,5 +41,6 @@
     ></script>
     <!-- Memuat script js kustom -->
     <script src="js/map.js"></script>
+    <script src="js/search.js"></script>
   </body>
 </html>
