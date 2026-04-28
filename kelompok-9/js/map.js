@@ -53,3 +53,29 @@ map.on("locationfound", function (e) {
 map.on("locationerror", function (e) {
   alert("Tidak dapat menjangkau lokasi Anda. Pastikan izin GPS diperbolehkan.");
 });
+
+// Koordinat yang disesuaikan mengikuti bentuk area halaman Masjid
+const komplekMasjidRayaCoords = [
+  [5.553120, 95.316364], 
+  [5.554356, 95.316975],
+  [5.553876, 95.317895], 
+  [5.553379, 95.319153], 
+  [5.552445, 95.318850],  
+];
+
+// Membuat polygon dengan warna hijau
+const areaMasjid = L.polygon(komplekMasjidRayaCoords, {
+  color: "#2d5a27",      // Warna garis tepi
+  fillColor: "#4CAF50",  // Warna isi
+  fillOpacity: 0.4,      // Transparansi
+  weight: 2
+}).addTo(map);
+
+areaMasjid.bindPopup("Batas Wilayah Komplek Masjid Raya Baiturrahman");
+
+// Menambahkan koordinant saat ditekan pada peta dan ditampilkan di console 
+map.on('click', function(e) {
+    console.log("[" + e.latlng.lat.toFixed(6) + ", " + e.latlng.lng.toFixed(6) + "],");
+});
+
+
