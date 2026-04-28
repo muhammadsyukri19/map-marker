@@ -3,7 +3,22 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Map Marker - Tugas Kelompok</title>
+    <title>Map Marker - Professional UI</title>
+
+    <!-- Google Fonts: Poppins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Font Awesome untuk Ikon Profesional -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
     <!-- Memuat Leaflet CSS -->
     <link
       rel="stylesheet"
@@ -11,31 +26,110 @@
       integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
       crossorigin=""
     />
+
     <!-- Memuat file CSS kustom -->
     <link rel="stylesheet" href="css/style.css" />
     <link rel="stylesheet" href="css/search.css" />
   </head>
   <body>
-    <header>
-      <h1>Proyek Map Marker Kelompok 9</h1>
-      <p>Lokasi: Masjid Raya Baiturrahman, Banda Aceh</p>
-    </header>
-
-    <!-- Kontainer Peta dan Search -->
-    <div class="search-container">
-      <input
-        type="text"
-        id="search-input"
-        placeholder="Cari sebuah tempat (misal: Masjid Raya, Tsunami Museum, dll.)"
-      />
-      <button id="search-btn">Cari</button>
-      <div id="search-results" class="search-results"></div>
-    </div>
-
-    <div class="map-controls">
-      <button id="btn-locate">📍 Lokasi Saya</button>
-    </div>
+    <!-- Kontainer Peta Full Screen (Background) -->
     <div id="map"></div>
+
+    <!-- UI Overlay Layer (Foreground) -->
+    <div class="ui-container">
+      <!-- Header Info Kiri Atas -->
+      <header class="glass-panel header-info tooltip-trigger">
+        <h1>
+          <i class="fa-solid fa-map-location-dot text-primary"></i> Map Marker
+          Kelompok 9
+        </h1>
+        <p>
+          <i class="fa-solid fa-location-dot text-muted"></i> Masjid Raya
+          Baiturrahman
+        </p>
+
+        <!-- Tooltip Anggota Kelompok saat di-hover -->
+        <div class="tooltip-content">
+          <strong>Anggota Kelompok 9:</strong><br />
+          <i class="fa-solid fa-user-check text-primary"></i> M. Azani Irvand
+          (2308107010026)<br />
+          <i class="fa-solid fa-user-check text-primary"></i> Muhammad Syukri
+          (2308107010060)<br />
+          <i class="fa-solid fa-user-check text-primary"></i> Razian Sabri
+          (2308107010050)
+        </div>
+      </header>
+
+      <!-- Search Panel Tengah Atas -->
+      <div class="glass-panel search-wrapper">
+        <div class="search-input-group">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input
+            type="text"
+            id="search-input"
+            placeholder="Cari sebuah tempat..."
+            autocomplete="off"
+          />
+          <button id="search-btn">Cari</button>
+        </div>
+        <div id="search-results" class="search-results"></div>
+      </div>
+
+      <!-- Tombol Aksi Kanan Bawah -->
+      <div class="floating-controls">
+        <!-- Tombol Lihat Info Kelompok -->
+        <button
+          id="btn-team"
+          class="glass-btn action-btn bg-white"
+          title="Info Kelompok"
+        >
+          <i class="fa-solid fa-users"></i>
+        </button>
+        <!-- Tombol GPS -->
+        <button
+          id="btn-locate"
+          class="glass-btn action-btn bg-white"
+          title="Lokasi Saya"
+        >
+          <i class="fa-solid fa-location-crosshairs"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal Info Tim (Awalnya Sembunyi) -->
+    <div id="team-modal" class="modal-overlay hidden">
+      <div class="modal-content glass-panel">
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-users text-primary"></i> Anggota Tim</h2>
+          <button id="close-modal" class="close-btn">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
+        <ul class="team-list">
+          <li>
+            <div class="avatar"><i class="fa-solid fa-user-astronaut"></i></div>
+            <div class="team-info">
+              <span class="team-name">Muhammad Azani Irvand</span>
+              <span class="team-npm">2308107010026</span>
+            </div>
+          </li>
+          <li>
+            <div class="avatar"><i class="fa-solid fa-user-ninja"></i></div>
+            <div class="team-info">
+              <span class="team-name">Muhammad Syukri</span>
+              <span class="team-npm">2308107010060</span>
+            </div>
+          </li>
+          <li>
+            <div class="avatar"><i class="fa-solid fa-user-graduate"></i></div>
+            <div class="team-info">
+              <span class="team-name">Razian Sabri</span>
+              <span class="team-npm">2308107010050</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
 
     <!-- Memuat Leaflet JS -->
     <script
@@ -43,6 +137,7 @@
       integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
       crossorigin=""
     ></script>
+
     <!-- Memuat script js kustom -->
     <script src="js/map.js"></script>
     <script src="js/search.js"></script>

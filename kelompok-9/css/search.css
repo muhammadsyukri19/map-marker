@@ -1,65 +1,107 @@
-.search-container {
+/* Search Wrapper - Posisi di UI Container */
+.search-wrapper {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  max-width: 450px; /* Lebar maksimal search bar di desktop */
+  padding: 8px;
+}
+
+.search-input-group {
   display: flex;
-  justify-content: center;
-  margin: 10px auto;
-  width: 80%;
+  align-items: center;
   gap: 10px;
-  position: relative;
-  z-index: 1000;
+  padding: 0 5px;
+}
+
+.search-icon {
+  color: var(--text-muted);
+  font-size: 1.1rem;
+  padding-left: 8px;
 }
 
 #search-input {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px 15px;
-  font-size: 14px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 5px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--text-main);
   outline: none;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: border-color 0.3s;
 }
 
-#search-input:focus {
-  border-color: #3498db;
+#search-input::placeholder {
+  color: #9ca3af; /* Abu-abu kalem */
 }
 
 #search-btn {
-  padding: 10px 20px;
-  font-size: 14px;
-  background-color: #2ecc71;
+  background-color: var(--primary);
   color: white;
   border: none;
-  border-radius: 5px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-family: inherit;
+  font-weight: 500;
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: background-color 0.3s;
+  transition:
+    background-color 0.2s ease,
+    transform 0.1s ease;
 }
 
 #search-btn:hover {
-  background-color: #27ae60;
+  background-color: var(--primary-hover);
+}
+
+#search-btn:active {
+  transform: scale(0.95);
+}
+
+#search-btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
 /* Hasil pencarian */
 .search-results {
   position: absolute;
-  top: 45px;
+  top: calc(100% + 10px); /* Jarak dari kotak pencarian */
+  left: 0;
   width: 100%;
-  max-width: 400px;
+  max-width: 100%;
   background-color: white;
-  border-radius: 5px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  text-align: left;
-  max-height: 200px;
+  border-radius: 12px;
+  box-shadow:
+    0 10px 25px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  max-height: 250px;
   overflow-y: auto;
   display: none;
+  z-index: 1001; /* Overlay map */
+  border: 1px solid #e5e7eb;
 }
 
 .search-item {
-  padding: 10px 15px;
-  font-size: 13px;
-  border-bottom: 1px solid #eee;
+  padding: 14px 20px;
+  font-size: 0.9rem;
+  color: var(--text-main);
+  border-bottom: 1px solid #f3f4f6;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.2s ease;
+}
+
+/* Ikon Pin FontAwesome otomatis di kiri list hasil search */
+.search-item:before {
+  content: "\f3c5"; /* Kode fontawesome location dot */
+  font-family: "Font Awesome 6 Free";
+  font-weight: 900;
+  margin-right: 12px;
+  color: var(--text-muted);
 }
 
 .search-item:last-child {
@@ -67,5 +109,19 @@
 }
 
 .search-item:hover {
-  background-color: #f4f4f9;
+  background-color: #f9fafb;
+}
+
+/* Menyesuaikan Scrollbar Agar Rapi (WebKit) */
+.search-results::-webkit-scrollbar {
+  width: 6px;
+}
+
+.search-results::-webkit-scrollbar-thumb {
+  background: var(--text-muted);
+  border-radius: 5px;
+}
+
+.search-results::-webkit-scrollbar-track {
+  background: transparent;
 }

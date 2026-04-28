@@ -1,76 +1,325 @@
-body {
-  font-family: Arial, sans-serif;
+/* Reset & Base Styles */
+* {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  text-align: center;
-  background-color: #f4f4f9;
 }
 
-header {
-  padding: 20px;
-  background-color: #2c3e50;
-  color: white;
+body,
+html {
+  width: 100%;
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+  overflow: hidden; /* Mencegah munculnya scrollbar & whitespace */
+  background-color: #e5e7eb;
 }
 
-/* Memastikan map memiliki tinggi yang jelas (wajib untuk Leaflet) */
+/* Color Variables */
+:root {
+  --primary: #3b82f6;
+  --primary-hover: #2563eb;
+  --text-main: #1f2937;
+  --text-muted: #6b7280;
+  --bg-glass: rgba(255, 255, 255, 0.9);
+  --border-glass: rgba(255, 255, 255, 0.4);
+}
+
+.text-primary {
+  color: var(--primary);
+}
+.text-muted {
+  color: var(--text-muted);
+}
+
+/* Map Full Screen Layer */
 #map {
-  width: 80%;
-  height: 500px;
-  margin: 20px auto;
-  border: 2px solid #ccc;
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 1; /* Map ada di layer paling bawah */
 }
 
-.map-controls {
-  width: 80%;
-  margin: 15px auto 0;
-  text-align: right;
+/* Kontainer Overlay Interface */
+.ui-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000; /* Berada di atas peta */
+  pointer-events: none; /* Mencegah UI menutupi klik ke map */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
 }
 
-#btn-locate {
-  padding: 10px 15px;
-  font-size: 14px;
-  background-color: #3498db;
-  color: white;
-  border: none;
-  border-radius: 5px;
+/* Mengaktifkan kembali interaksi klik pada komponen UI */
+.glass-panel,
+.glass-btn,
+.search-wrapper {
+  pointer-events: auto;
+}
+
+/* Glassmorphism Panel (Desain Clean Modern) */
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-glass);
+  border-radius: 12px;
+  box-shadow:
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Header Info */
+.header-info {
+  padding: 15px 20px;
+  width: fit-content;
+  max-width: 90%;
+}
+
+.header-info h1 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 4px;
+}
+
+.header-info p {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+/* Floating Controls Layer (User Location Btn dll) */
+.floating-controls {
+  position: absolute;
+  bottom: 120px; /* Diberi jarak agar tak bertabrakan dengan tombol Zoom Leaflet */
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.glass-btn {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-glass);
+  border-radius: 50%;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-  transition: background-color 0.3s;
-}
-
-#btn-locate:hover {
-  background-color: #2980b9;
-}
-
-/* Styling untuk Layer Control */
-.leaflet-control-layers {
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  padding: 10px;
-}
-
-.leaflet-control-layers-toggle {
-  width: 36px;
-  height: 36px;
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><g><circle cx="12" cy="12" r="1"/><circle cx="19" cy="12" r="1"/><circle cx="5" cy="12" r="1"/></g></svg>');
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: 60%;
-}
-
-.leaflet-control-layers label {
   display: flex;
   align-items: center;
-  margin-bottom: 8px;
-  cursor: pointer;
-  font-size: 13px;
+  justify-content: center;
+  transition: all 0.2s ease;
+  color: var(--text-main);
 }
 
-.leaflet-control-layers input[type="radio"],
-.leaflet-control-layers input[type="checkbox"] {
-  margin-right: 8px;
+.glass-btn:hover {
+  background: white;
+  transform: translateY(-2px);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  color: var(--primary);
+}
+
+.bg-white {
+  background-color: white;
+}
+
+.action-btn {
+  width: 50px;
+  height: 50px;
+  font-size: 1.3rem;
+  color: var(--primary);
+}
+
+/* --- LEAFLET UI OVERRIDES --- */
+.leaflet-control-zoom {
+  border: none !important;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1) !important;
+  border-radius: 8px !important;
+  overflow: hidden;
+  margin-right: 20px !important; /* Spasi Leaflet bawaan */
+  margin-top: 20px !important;
+}
+
+.leaflet-bar a {
+  background-color: var(--bg-glass) !important;
+  color: var(--text-main) !important;
+  width: 40px !important;
+  height: 40px !important;
+  line-height: 40px !important;
+  font-family: "Poppins", sans-serif !important;
+  font-size: 1.1rem !important;
+}
+
+.leaflet-bar a:hover {
+  background-color: white !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(255, 255, 255, 0.7) !important;
+  font-family: inherit !important;
+}
+
+/* --- TOOLTIP & MODAL TEAM --- */
+.tooltip-trigger {
+  position: relative;
+  cursor: help;
+}
+
+.tooltip-content {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  background: var(--bg-glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  color: var(--text-main);
+  border: 1px solid var(--border-glass);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+  line-height: 1.6;
+  z-index: 10;
+}
+
+/* Saat judul (header) disentuh mouse */
+.tooltip-trigger:hover .tooltip-content {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(5px);
+}
+
+.tooltip-content strong {
+  display: block;
+  margin-bottom: 5px;
+  color: #111827; /* Text lebih gelap */
+  font-size: 0.9rem;
+}
+
+.tooltip-content i {
+  margin-right: 5px;
+  opacity: 0.8;
+}
+
+/* Base Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5); /* Gelap transparan */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s ease;
+  pointer-events: auto; /* Bisa diklik (overlay luar bisa tutup modalnya) */
+}
+
+/* Kelas penyembunyi element */
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+/* Style Kotak Modal nya */
+.modal-overlay .modal-content {
+  background: var(--bg-glass);
+  min-width: 320px;
+  padding: 25px 30px;
+  border-color: white;
+  transform: scale(1);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Popup effect */
+}
+
+.hidden .modal-content {
+  transform: scale(0.9);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.modal-header h2 {
+  font-size: 1.2rem;
+  color: var(--text-main);
+  margin: 0;
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.4rem;
+  color: var(--text-muted);
   cursor: pointer;
+  transition: color 0.2s;
+  padding: 5px;
+}
+
+.close-btn:hover {
+  color: #ef4444; /* Warna merah saat disorot */
+}
+
+.team-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.team-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+  gap: 15px;
+}
+
+.team-list li:last-child {
+  margin-bottom: 0; /* Jarak baris terakhir dibuang */
+}
+
+.avatar {
+  width: 45px;
+  height: 45px;
+  background: #eff6ff; /* Biru sangat muda */
+  color: var(--primary);
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+}
+
+.team-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.team-name {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--text-main);
+}
+
+.team-npm {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  opacity: 0.9;
 }

@@ -1,64 +1,79 @@
 // Inisialisasi peta dan tentukan koordinat tengah (Masjid Raya Baiturrahman) serta level zoom
-const map = L.map("map").setView([5.5538, 95.3186], 16);
+// Memindahkan kontrol zoom bawaan ke pojok kanan bawah agar tak menutupi deskripsi
+const map = L.map("map", { zoomControl: false }).setView([5.5538, 95.3186], 16);
+L.control.zoom({ position: "bottomright" }).addTo(map);
 
 // --- Definisi berbagai tile layer (peta) ---
-const osmStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-});
+const osmStreet = L.tileLayer(
+  "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+  {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  },
+);
 
-const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-  maxZoom: 19,
-  attribution:
-    '&copy; <a href="https://www.arcgis.com/">ArcGIS</a>',
-});
+const satellite = L.tileLayer(
+  "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  {
+    maxZoom: 19,
+    attribution: '&copy; <a href="https://www.arcgis.com/">ArcGIS</a>',
+  },
+);
 
-const topoMap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
-  maxZoom: 17,
-  attribution:
-    '&copy; <a href="https://opentopomap.org/">OpenTopoMap</a>',
-});
+const topoMap = L.tileLayer(
+  "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png",
+  {
+    maxZoom: 17,
+    attribution: '&copy; <a href="https://opentopomap.org/">OpenTopoMap</a>',
+  },
+);
 
 // Set layer default (Jalan/Street)
 osmStreet.addTo(map);
 
 // --- Layer control untuk mengganti peta ---
-const layerControl = L.control.layers(
-  {
-    "🗺️ Jalan (Street)": osmStreet,
-    "🛰️ Satelit": satellite,
-    "🏔️ Topografi": topoMap
-  },
-  null,
-  { position: "topright", collapsed: false }
-).addTo(map);
+const layerControl = L.control
+  .layers(
+    {
+      "🗺️ Jalan (Street)": osmStreet,
+      "🛰️ Satelit": satellite,
+      "🏔️ Topografi": topoMap,
+    },
+    null,
+    { position: "topright", collapsed: false },
+  )
+  .addTo(map);
 
 // --- Custom SVG Icon untuk Masjid Raya ---
 // Ubah path di sini sesuai dengan file SVG yang Anda inginkan
-const SVG_ICON_PATH = 'assets/mosque-icon.svg';
+const SVG_ICON_PATH = "assets/mosque-icon.svg";
 
 // Fetch SVG dan render sebagai icon
 fetch(SVG_ICON_PATH)
-  .then(response => response.text())
-  .then(svgData => {
+  .then((response) => response.text())
+  .then((svgData) => {
     const masjidIcon = L.divIcon({
       html: svgData,
       iconSize: [40, 50],
       iconAnchor: [20, 50],
       popupAnchor: [0, -50],
-      className: 'svg-icon-masjid'
+      className: "svg-icon-masjid",
     });
 
     // Menambahkan marker di koordinat Masjid Raya Baiturrahman dengan custom SVG icon
-    const marker = L.marker([5.553221, 95.318375], { icon: masjidIcon }).addTo(map);
+    const marker = L.marker([5.553221, 95.318375], { icon: masjidIcon }).addTo(
+      map,
+    );
 
     // Menambahkan popup pada marker yang akan otomatis terbuka
     marker
-      .bindPopup("<b>Masjid Raya Baiturrahman</b><br>ikon pusat keagamaan, budaya, dan sejarah Aceh yang terletak di pusat Kota Banda Aceh.")
+      .bindPopup(
+        "<b>Masjid Raya Baiturrahman</b><br>ikon pusat keagamaan, budaya, dan sejarah Aceh yang terletak di pusat Kota Banda Aceh.",
+      )
       .openPopup();
   })
-  .catch(error => console.error('Error loading SVG:', error));
+  .catch((error) => console.error("Error loading SVG:", error));
 
 // --- Fitur Lokasi Saya (Geolocation) ---
 
@@ -98,62 +113,89 @@ map.on("locationerror", function (e) {
   alert("Tidak dapat menjangkau lokasi Anda. Pastikan izin GPS diperbolehkan.");
 });
 
+// --- Fitur Modal Info Tim ---
+const btnTeam = document.getElementById("btn-team");
+const teamModal = document.getElementById("team-modal");
+const closeModalBtn = document.getElementById("close-modal");
+
+// Buka Modal
+btnTeam.addEventListener("click", function () {
+  teamModal.classList.remove("hidden");
+});
+
+// Tutup Modal lewat Tombol (X)
+closeModalBtn.addEventListener("click", function () {
+  teamModal.classList.add("hidden");
+});
+
+// Tutup Modal jika mengklik area gelap (overlay) di luar kotak putih
+teamModal.addEventListener("click", function (e) {
+  if (e.target === teamModal) {
+    teamModal.classList.add("hidden");
+  }
+});
+
 // Koordinat yang disesuaikan mengikuti bentuk area halaman Masjid
 const komplekMasjidRayaCoords = [
-  [5.553120, 95.316364], 
+  [5.55312, 95.316364],
   [5.554356, 95.316975],
-  [5.553876, 95.317895], 
-  [5.553379, 95.319153], 
-  [5.552445, 95.318850],  
+  [5.553876, 95.317895],
+  [5.553379, 95.319153],
+  [5.552445, 95.31885],
 ];
 
 // Membuat polygon dengan warna hijau
 const areaMasjid = L.polygon(komplekMasjidRayaCoords, {
-  color: "#2d5a27",      // Warna garis tepi
-  fillColor: "#4CAF50",  // Warna isi
-  fillOpacity: 0.4,      // Transparansi
-  weight: 2
+  color: "#2d5a27", // Warna garis tepi
+  fillColor: "#4CAF50", // Warna isi
+  fillOpacity: 0.4, // Transparansi
+  weight: 2,
 }).addTo(map);
 
 areaMasjid.bindPopup("Batas Wilayah Komplek Masjid Raya Baiturrahman");
 
-// Menambahkan koordinant saat ditekan pada peta dan ditampilkan di console 
-map.on('click', function(e) {
-    console.log("[" + e.latlng.lat.toFixed(6) + ", " + e.latlng.lng.toFixed(6) + "],");
+// Menambahkan koordinant saat ditekan pada peta dan ditampilkan di console
+map.on("click", function (e) {
+  console.log(
+    "[" + e.latlng.lat.toFixed(6) + ", " + e.latlng.lng.toFixed(6) + "],",
+  );
 });
-
 
 // Daftar lokasi ikonik di sekitar Masjid Raya Baiturrahman
 const lokasiIkonik = [
   {
     nama: "Lapangan Blang Padang",
-    koordinat: [5.549960, 95.314068],
-    keterangan: "ruang terbuka hijau dan ikon sejarah penting di pusat Kota Banda Aceh."
+    koordinat: [5.54996, 95.314068],
+    keterangan:
+      "ruang terbuka hijau dan ikon sejarah penting di pusat Kota Banda Aceh.",
   },
   {
     nama: "Museum Tsunami Aceh",
     koordinat: [5.547771, 95.315119],
-    keterangan: "museum di Banda Aceh untuk mengenang korban gempa dan tsunami 2004"
+    keterangan:
+      "museum di Banda Aceh untuk mengenang korban gempa dan tsunami 2004",
   },
   {
     nama: "Taman Sari Bustanussalatin",
     koordinat: [5.545655, 95.315859],
-    keterangan: "Taman kota bersejarah yang menjadi tempat rekreasi warga."
+    keterangan: "Taman kota bersejarah yang menjadi tempat rekreasi warga.",
   },
   {
     nama: "Museum Negeri Aceh",
     koordinat: [5.549041, 95.320945],
-    keterangan: "Museum sejarah dan budaya Aceh yang terkenal dengan Rumoh Aceh-nya."
+    keterangan:
+      "Museum sejarah dan budaya Aceh yang terkenal dengan Rumoh Aceh-nya.",
   },
   {
     nama: "Kherkof Peucut",
     koordinat: [5.546722, 95.314507],
-    keterangan: "kompleks pemakaman militer Belanda terbesar kedua di dunia, berlokasi di pusat kota Banda Aceh."
-  }
+    keterangan:
+      "kompleks pemakaman militer Belanda terbesar kedua di dunia, berlokasi di pusat kota Banda Aceh.",
+  },
 ];
 
 // Menambahkan marker untuk setiap lokasi di dalam array lokasiIkonik
-lokasiIkonik.forEach(function(tempat) {
+lokasiIkonik.forEach(function (tempat) {
   L.marker(tempat.koordinat)
     .addTo(map)
     .bindPopup(`<b>${tempat.nama}</b><br>${tempat.keterangan}`);
