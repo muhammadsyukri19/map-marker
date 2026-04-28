@@ -9,11 +9,11 @@ L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
 }).addTo(map);
 
 // Menambahkan marker di koordinat Masjid Raya Baiturrahman
-const marker = L.marker([5.5538, 95.3186]).addTo(map);
+const marker = L.marker([5.553221, 95.318375]).addTo(map);
 
 // Menambahkan popup pada marker yang akan otomatis terbuka
 marker
-  .bindPopup("<b>Masjid Raya Baiturrahman</b><br>Banda Aceh, Aceh.")
+  .bindPopup("<b>Masjid Raya Baiturrahman</b><br>ikon pusat keagamaan, budaya, dan sejarah Aceh yang terletak di pusat Kota Banda Aceh.")
   .openPopup();
 
 // --- Fitur Lokasi Saya (Geolocation) ---
@@ -79,3 +79,38 @@ map.on('click', function(e) {
 });
 
 
+// Daftar lokasi ikonik di sekitar Masjid Raya Baiturrahman
+const lokasiIkonik = [
+  {
+    nama: "Lapangan Blang Padang",
+    koordinat: [5.549960, 95.314068],
+    keterangan: "ruang terbuka hijau dan ikon sejarah penting di pusat Kota Banda Aceh."
+  },
+  {
+    nama: "Museum Tsunami Aceh",
+    koordinat: [5.547771, 95.315119],
+    keterangan: "museum di Banda Aceh untuk mengenang korban gempa dan tsunami 2004"
+  },
+  {
+    nama: "Taman Sari Bustanussalatin",
+    koordinat: [5.545655, 95.315859],
+    keterangan: "Taman kota bersejarah yang menjadi tempat rekreasi warga."
+  },
+  {
+    nama: "Museum Negeri Aceh",
+    koordinat: [5.549041, 95.320945],
+    keterangan: "Museum sejarah dan budaya Aceh yang terkenal dengan Rumoh Aceh-nya."
+  },
+  {
+    nama: "Kherkof Peucut",
+    koordinat: [5.546722, 95.314507],
+    keterangan: "kompleks pemakaman militer Belanda terbesar kedua di dunia, berlokasi di pusat kota Banda Aceh."
+  }
+];
+
+// Menambahkan marker untuk setiap lokasi di dalam array lokasiIkonik
+lokasiIkonik.forEach(function(tempat) {
+  L.marker(tempat.koordinat)
+    .addTo(map)
+    .bindPopup(`<b>${tempat.nama}</b><br>${tempat.keterangan}`);
+});
