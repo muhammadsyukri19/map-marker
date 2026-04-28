@@ -1,12 +1,38 @@
 // Inisialisasi peta dan tentukan koordinat tengah (Masjid Raya Baiturrahman) serta level zoom
 const map = L.map("map").setView([5.5538, 95.3186], 16);
 
-// Menambahkan tile layer dari OpenStreetMap
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+// --- Definisi berbagai tile layer (peta) ---
+const osmStreet = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution:
     '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
-}).addTo(map);
+});
+
+const satellite = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+  maxZoom: 19,
+  attribution:
+    '&copy; <a href="https://www.arcgis.com/">ArcGIS</a>',
+});
+
+const topoMap = L.tileLayer("https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png", {
+  maxZoom: 17,
+  attribution:
+    '&copy; <a href="https://opentopomap.org/">OpenTopoMap</a>',
+});
+
+// Set layer default (Jalan/Street)
+osmStreet.addTo(map);
+
+// --- Layer control untuk mengganti peta ---
+const layerControl = L.control.layers(
+  {
+    "🗺️ Jalan (Street)": osmStreet,
+    "🛰️ Satelit": satellite,
+    "🏔️ Topografi": topoMap
+  },
+  null,
+  { position: "topright", collapsed: false }
+).addTo(map);
 
 // --- Custom SVG Icon untuk Masjid Raya ---
 // Ubah path di sini sesuai dengan file SVG yang Anda inginkan
@@ -33,11 +59,6 @@ fetch(SVG_ICON_PATH)
       .openPopup();
   })
   .catch(error => console.error('Error loading SVG:', error));
-
-// Menambahkan popup pada marker yang akan otomatis terbuka
-marker
-  .bindPopup("<b>Masjid Raya Baiturrahman</b><br>ikon pusat keagamaan, budaya, dan sejarah Aceh yang terletak di pusat Kota Banda Aceh.")
-  .openPopup();
 
 // --- Fitur Lokasi Saya (Geolocation) ---
 
