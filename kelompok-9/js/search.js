@@ -72,7 +72,7 @@ function displayResults(data) {
       const resultMarker = L.marker([lat, lon])
         .bindPopup(`<b>Hasil Pencarian:</b><br>${item.display_name}`)
         .openPopup();
-      
+
       searchMarkerLayer.addLayer(resultMarker);
     });
 
@@ -91,8 +91,8 @@ searchInput.addEventListener("keypress", function (e) {
 });
 
 // Tutup list pencarian jika pengguna mengklik area luar
-document.addEventListener("click", function(e) {
-    if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
-        searchResults.style.display = "none";
-    }
+document.addEventListener("click", function (e) {
+  if (!searchInput.contains(e.target) && !searchResults.contains(e.target)) {
+    searchResults.style.display = "none";
+  }
 });
